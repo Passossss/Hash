@@ -1,6 +1,11 @@
 package Hash;
 
-import java.util.HashMap;
 public class Hash {
+    private String[] nomes;
+
+    public String[] pegarNome(){
+        return nomes;
+    }
+
     //
 }
