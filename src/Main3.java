@@ -1,131 +1,20 @@
+import TbHash.Hash2;
+import TbHash.Hash1;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.IOException;
-
+import java.util.Map;
 
 public class Main3 {
-
-    // Classe Hash1: Implementação de uma tabela hash simples com função de hash polinomial
-    static class Hash1 {
-        private final String[] table;
-        private int collisions;
-
-        public Hash1(int size) {
-            table = new String[size];
-            collisions = 0;
-        }
-
-        public int getHashCode(String value) {
-            int hash = 0;
-            int prime = 31;
-            for (int i = 0; i < value.length(); i++) {
-                hash = prime * hash + value.charAt(i);
-            }
-            return Math.abs(hash % table.length);
-        }
-
-        public void put(String value) {
-            int index = getHashCode(value);
-            if (table[index] != null) {
-                collisions++;
-            }
-            table[index] = value;
-        }
-
-        public boolean contains(String value) {
-            int index = getHashCode(value);
-            return table[index] != null && table[index].equals(value);
-        }
-
-        public int getColisoes() {
-            return collisions;
-        }
-
-        public void printHashTableWithSize() {
-            for (int i = 0; i < table.length; i++) {
-                if (table[i] != null) {
-                    System.out.println("Índice " + i + ": 1 chave(s)");
-                } else {
-                    System.out.println("Índice " + i + ": Nenhuma chave");
-                }
-            }
-        }
-
-        public Map<Integer, Integer> getColisoesPorIndice() {
-            Map<Integer, Integer> colisoesPorIndice = new HashMap<>();
-            for (int i = 0; i < table.length; i++) {
-                if (table[i] != null) {
-                    colisoesPorIndice.put(i, colisoesPorIndice.getOrDefault(i, 0) + 1);
-                }
-            }
-            return colisoesPorIndice;
-        }
-    }
-
-    // Classe Hash2: Implementação de uma tabela hash simples com função de hash baseada na soma de caracteres
-    static class Hash2 {
-        private final String[] table;
-        private int collisions;
-
-        public Hash2(int size) {
-            table = new String[size];
-            collisions = 0;
-        }
-
-        public int getHashCode(String value) {
-            int hash = 0;
-            for (int i = 0; i < value.length(); i++) {
-                hash += value.charAt(i);
-            }
-            return Math.abs(hash % table.length);
-        }
-
-        public void put(String value) {
-            int index = getHashCode(value);
-            if (table[index] != null) {
-                collisions++;
-            }
-            table[index] = value;
-        }
-
-        public boolean contains(String value) {
-            int index = getHashCode(value);
-            return table[index] != null && table[index].equals(value);
-        }
-
-        public int getColisoes() {
-            return collisions;
-        }
-
-        public void printHashTableWithSize() {
-            for (int i = 0; i < table.length; i++) {
-                if (table[i] != null) {
-                    System.out.println("Índice " + i + ": 1 chave(s)");
-                } else {
-                    System.out.println("Índice " + i + ": Nenhuma chave");
-                }
-            }
-        }
-
-        public Map<Integer, Integer> getColisoesPorIndice() {
-            Map<Integer, Integer> colisoesPorIndice = new HashMap<>();
-            for (int i = 0; i < table.length; i++) {
-                if (table[i] != null) {
-                    colisoesPorIndice.put(i, colisoesPorIndice.getOrDefault(i, 0) + 1);
-                }
-            }
-            return colisoesPorIndice;
-        }
-    }
-
     public static void main(String[] args) {
         int indexes = 600;
-        var hash1 = new Hash1(indexes);  // Hash1 é a implementação do polinomial
-        var hash2 = new Hash2(indexes);  // Hash2 é a implementação do LoseLose
+        var Hash1 = new Hash1(indexes);
+        var Hash2 = new Hash2(indexes);
 
-        String caminhoArquivo = "src/female_names.txt"; // Caminho do arquivo de entrada
+        String caminhoArquivo = "C:/Users/Gustavo Passos/Desktop/Hash/src/female_names.txt";
 
         long startTime, endTime;
         long totalInsertionTimeHash1 = 0, totalInsertionTimeHash2 = 0;
@@ -135,27 +24,23 @@ public class Main3 {
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
-                // Inserção e medição de tempo para Hash1
                 startTime = System.nanoTime();
-                hash1.put(linha);
+                Hash1.put(linha);
                 endTime = System.nanoTime();
                 totalInsertionTimeHash1 += (endTime - startTime);
 
-                // Inserção e medição de tempo para Hash2
                 startTime = System.nanoTime();
-                hash2.put(linha);
+                Hash2.put(linha);
                 endTime = System.nanoTime();
                 totalInsertionTimeHash2 += (endTime - startTime);
 
-                // Busca e medição de tempo para Hash1
                 startTime = System.nanoTime();
-                hash1.contains(linha);
+                Hash1.contains(linha);
                 endTime = System.nanoTime();
                 totalSearchTimeHash1 += (endTime - startTime);
 
-                // Busca e medição de tempo para Hash2
                 startTime = System.nanoTime();
-                hash2.contains(linha);
+                Hash2.contains(linha);
                 endTime = System.nanoTime();
                 totalSearchTimeHash2 += (endTime - startTime);
 
@@ -165,15 +50,13 @@ public class Main3 {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        // Calculando o tempo médio de inserção e busca
         double avgInsertionTimeHash1 = (double) totalInsertionTimeHash1 / count;
         double avgInsertionTimeHash2 = (double) totalInsertionTimeHash2 / count;
         double avgSearchTimeHash1 = (double) totalSearchTimeHash1 / count;
         double avgSearchTimeHash2 = (double) totalSearchTimeHash2 / count;
 
-        // Exibindo resultados
-        System.out.printf("Colisoes da Funcao Hash1 (Polinomial): %d%n", hash1.getColisoes());
-        System.out.printf("Colisoes da Funcao Hash2 (LoseLose): %d%n", hash2.getColisoes());
+        System.out.printf("Colisoes da Funcao Hash Hash1: %d%n", Hash1.getColisoes());
+        System.out.printf("Colisoes da Funcao Hash Hash2: %d%n", Hash2.getColisoes());
 
         System.out.printf("Tempo total de inserção (Hash1): %.3f ms%n", totalInsertionTimeHash1 / 1_000_000.0);
         System.out.printf("Tempo total de inserção (Hash2): %.3f ms%n", totalInsertionTimeHash2 / 1_000_000.0);
@@ -181,10 +64,76 @@ public class Main3 {
         System.out.printf("Tempo total de busca (Hash1): %.3f ms%n", totalSearchTimeHash1 / 1_000_000.0);
         System.out.printf("Tempo total de busca (Hash2): %.3f ms%n", totalSearchTimeHash2 / 1_000_000.0);
 
-        // Exibindo tabelas de colisões por índice no terminal
+        // Exibe gráfico para Hash1
+        Map<Integer, Integer> colisaoHash1 = Hash1.getColisoesPorIndice();
+        JFrame frameHash1 = new JFrame("Gráfico de Colisões Hash1");
+        frameHash1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameHash1.setSize(800, 600);
+        frameHash1.add(new GraficoColisoesPanel(colisaoHash1, "Colisões por Índice - Hash1"));
+        frameHash1.setVisible(true);
+
+        // Exibe gráfico para Hash2
+        Map<Integer, Integer> colisaoHash2 = Hash2.getColisoesPorIndice();
+        JFrame frameHash2 = new JFrame("Gráfico de Colisões Hash2");
+        frameHash2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameHash2.setSize(800, 600);
+        frameHash2.add(new GraficoColisoesPanel(colisaoHash2, "Colisões por Índice - Hash2"));
+        frameHash2.setVisible(true);
+
         System.out.println("Tabela Hash Hash1 (Número de chaves por índice):");
-        hash1.printHashTableWithSize();
+        Hash1.printHashTableWithSize();
         System.out.println("Tabela Hash Hash2 (Número de chaves por índice):");
-        hash2.printHashTableWithSize();
+        Hash2.printHashTableWithSize();
+    }
+}
+
+class GraficoColisoesPanel extends JPanel {
+    private final Map<Integer, Integer> colisoes;
+    private final String titulo;
+
+    public GraficoColisoesPanel(Map<Integer, Integer> colisoes, String titulo) {
+        this.colisoes = colisoes;
+        this.titulo = titulo;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        int width = getWidth();
+        int height = getHeight();
+        int padding = 50;
+        int barWidth = (width - 2 * padding) / colisoes.size();
+
+        // Desenha o título
+        g2d.drawString(titulo, width / 2 - 50, padding / 2);
+
+        // Encontra o valor máximo de colisões para escalonar a altura
+        int maxColisoes = colisoes.values().stream().mapToInt(Integer::intValue).max().orElse(1);
+
+        // Desenha uma escala de colisões na lateral esquerda
+        g2d.setColor(Color.BLACK);
+        for (int i = 0; i <= 10; i++) { // Dividimos em 10 partes para a escala
+            int y = height - padding - (i * (height - 2 * padding) / 10);
+            int colisoesValor = (int) ((double) maxColisoes * i / 10);
+            g2d.drawString(String.valueOf(colisoesValor), padding - 30, y);
+            g2d.drawLine(padding - 5, y, padding, y); // Linha de marcação na escala
+        }
+
+        // Desenha as barras do gráfico
+        int x = padding;
+        for (Map.Entry<Integer, Integer> entry : colisoes.entrySet()) {
+            int numColisoes = entry.getValue();
+
+            int barHeight = (int) ((double) numColisoes / maxColisoes * (height - 2 * padding));
+
+            // Desenha a barra
+            g2d.setColor(Color.BLUE);
+            g2d.fillRect(x, height - padding - barHeight, barWidth, barHeight);
+
+            // Avança para o próximo índice
+            x += barWidth + 5;
+        }
     }
 }
