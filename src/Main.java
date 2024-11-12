@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
-public class Main3 {
+public class Main {
     public static void main(String[] args) {
         int indexes = 600;
         var Hash1 = new Hash1(indexes);
