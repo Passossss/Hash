@@ -1,3 +1,5 @@
+package TbHash;
+
 public class Hash1 extends TabelaHash {
 
     public Hash1(int length) {
