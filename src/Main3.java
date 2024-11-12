@@ -64,7 +64,6 @@ public class Main3 {
         System.out.printf("Tempo total de busca (Hash1): %.3f ms%n", totalSearchTimeHash1 / 1_000_000.0);
         System.out.printf("Tempo total de busca (Hash2): %.3f ms%n", totalSearchTimeHash2 / 1_000_000.0);
 
-        // Exibe gráfico para Hash1
         Map<Integer, Integer> colisaoHash1 = Hash1.getColisoesPorIndice();
         JFrame frameHash1 = new JFrame("Gráfico de Colisões Hash1");
         frameHash1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,7 +71,6 @@ public class Main3 {
         frameHash1.add(new GraficoColisoesPanel(colisaoHash1, "Colisões por Índice - Hash1"));
         frameHash1.setVisible(true);
 
-        // Exibe gráfico para Hash2
         Map<Integer, Integer> colisaoHash2 = Hash2.getColisoesPorIndice();
         JFrame frameHash2 = new JFrame("Gráfico de Colisões Hash2");
         frameHash2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,33 +104,28 @@ class GraficoColisoesPanel extends JPanel {
         int padding = 50;
         int barWidth = (width - 2 * padding) / colisoes.size();
 
-        // Desenha o título
         g2d.drawString(titulo, width / 2 - 50, padding / 2);
 
-        // Encontra o valor máximo de colisões para escalonar a altura
         int maxColisoes = colisoes.values().stream().mapToInt(Integer::intValue).max().orElse(1);
 
-        // Desenha uma escala de colisões na lateral esquerda
+
         g2d.setColor(Color.BLACK);
-        for (int i = 0; i <= 10; i++) { // Dividimos em 10 partes para a escala
+        for (int i = 0; i <= 10; i++) { 
             int y = height - padding - (i * (height - 2 * padding) / 10);
             int colisoesValor = (int) ((double) maxColisoes * i / 10);
             g2d.drawString(String.valueOf(colisoesValor), padding - 30, y);
-            g2d.drawLine(padding - 5, y, padding, y); // Linha de marcação na escala
+            g2d.drawLine(padding - 5, y, padding, y); 
         }
 
-        // Desenha as barras do gráfico
         int x = padding;
         for (Map.Entry<Integer, Integer> entry : colisoes.entrySet()) {
             int numColisoes = entry.getValue();
 
             int barHeight = (int) ((double) numColisoes / maxColisoes * (height - 2 * padding));
 
-            // Desenha a barra
             g2d.setColor(Color.BLUE);
             g2d.fillRect(x, height - padding - barHeight, barWidth, barHeight);
 
-            // Avança para o próximo índice
             x += barWidth + 5;
         }
     }
